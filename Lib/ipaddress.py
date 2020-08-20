@@ -16,6 +16,7 @@ import functools
 IPV4LENGTH = 32
 IPV6LENGTH = 128
 
+
 class AddressValueError(ValueError):
     """A Value Error related to the address."""
 
@@ -295,7 +296,8 @@ def _collapse_addresses_internal(addresses):
     last = None
     for net in sorted(subnets.values()):
         if last is not None:
-            # Since they are sorted, last.network_address <= net.network_address
+            # Since they are sorted,
+            # last.network_address <= net.network_address
             # is a given.
             if last.broadcast_address >= net.broadcast_address:
                 continue
@@ -562,6 +564,7 @@ class _IPAddressBase:
 
 _address_fmt_re = None
 
+
 @functools.total_ordering
 class _BaseAddress(_IPAddressBase):
 
@@ -626,7 +629,8 @@ class _BaseAddress(_IPAddressBase):
         Supported presentation types are:
         's': returns the IP address as a string (default)
         'b': converts to binary and returns a zero-padded string
-        'X' or 'x': converts to upper- or lower-case hex and returns a zero-padded string
+        'X' or 'x': converts to upper- or lower-case hex and returns a
+            zero-padded string
         'n': the same as 'b' for IPv4 and 'x' for IPv6
 
         For binary and hex presentation types, the alternate form specifier
@@ -1124,6 +1128,7 @@ class _BaseNetwork(_IPAddressBase):
         return (self.network_address.is_loopback and
                 self.broadcast_address.is_loopback)
 
+
 class _BaseV4:
 
     """Base IPv4 object.
@@ -1332,7 +1337,8 @@ class IPv4Address(_BaseV4, _BaseAddress):
     @property
     @functools.lru_cache()
     def is_global(self):
-        return self not in self._constants._public_network and not self.is_private
+        return (self not in self._constants._public_network and
+                not self.is_private)
 
     @property
     def is_multicast(self):
@@ -1420,7 +1426,8 @@ class IPv4Interface(IPv4Address):
             return False
 
     def __hash__(self):
-        return hash((self._ip, self._prefixlen, int(self.network.network_address)))
+        return hash((self._ip, self._prefixlen,
+                     int(self.network.network_address)))
 
     __reduce__ = _IPAddressBase.__reduce__
 
@@ -1522,7 +1529,7 @@ class IPv4Network(_BaseV4, _BaseNetwork):
 
         """
         return (not (self.network_address in IPv4Network('100.64.0.0/10') and
-                    self.broadcast_address in IPv4Network('100.64.0.0/10')) and
+                     self.broadcast_address in IPv4Network('100.64.0.0/10')) and
                 not self.is_private)
 
 
@@ -1934,7 +1941,8 @@ class IPv6Address(_BaseV6, _BaseAddress):
         See RFC 4007 for details.
 
         Returns:
-            A string identifying the zone of the address if specified, else None.
+            A string identifying the zone of the address if specified, else
+            None.
 
         """
         return self._scope_id
@@ -2120,7 +2128,8 @@ class IPv6Interface(IPv6Address):
             return False
 
     def __hash__(self):
-        return hash((self._ip, self._prefixlen, int(self.network.network_address)))
+        return hash((self._ip, self._prefixlen,
+                     int(self.network.network_address)))
 
     __reduce__ = _IPAddressBase.__reduce__
 
